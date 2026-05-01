@@ -1,2 +1,2 @@
 # DHI_Online
-https://github.com/bankktn/DHI_Online/dhi_form.html
+https://bankktn.github.io/DHI_Online/dhi_form.html
