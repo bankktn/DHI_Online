@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผลการประเมิน DHI</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--teal:#0d7c8f;--teal-light:#e6f4f7;--teal-mid:#1a9db3;--navy:#0a2f3f;--bg:#f0f6f8;--gray-100:#f0f4f7;--gray-200:#dde4ea;--gray-400:#8fa3b1;--gray-700:#3a4f5c;--text:#1a2e38;--radius:18px;--P:#2563eb;--E:#7c3aed;--F:#059669}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);font-family:'Sarabun','IBM Plex Sans Thai',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:48px}
+  .topbar{width:100%;background:linear-gradient(135deg,var(--navy),var(--teal));padding:18px 20px 16px;text-align:center;color:white}
+  .topbar .clinic{font-size:11px;opacity:0.7;letter-spacing:0.5px;margin-bottom:4px}
+  .topbar h1{font-size:17px;font-weight:700}
+  .card-wrap{width:100%;max-width:440px;padding:20px 16px 0;display:flex;flex-direction:column;gap:14px}
+  .thanks-card{background:white;border-radius:var(--radius);padding:28px 24px;text-align:center;box-shadow:0 4px 24px rgba(13,124,143,0.10)}
+  .checkmark{width:72px;height:72px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:34px}
+  .thanks-card h2{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px}
+  .thanks-card p{font-size:14px;color:var(--gray-700);line-height:1.7}
+  .pt-info{font-size:12px;color:var(--gray-400);text-align:center;padding:4px 0 0}
+  .next-card{background:linear-gradient(135deg,var(--navy),var(--teal));border-radius:var(--radius);padding:22px 24px;color:white;box-shadow:0 4px 24px rgba(13,124,143,0.20)}
+  .next-card h3{font-size:15px;font-weight:700;margin-bottom:10px}
+  .next-card p{font-size:13.5px;opacity:0.85;line-height:1.7}
+  .btn-hads{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:white;border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-shadow:0 4px 16px rgba(124,58,237,0.30);transition:all 0.2s}
+  .btn-hads:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,0.40)}
+  .btn-clinician{width:100%;padding:14px 16px;background:white;border:1.5px solid var(--gray-200);border-radius:12px;font-family:inherit;font-size:13px;font-weight:600;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s}
+  .btn-clinician:hover{border-color:var(--teal);color:var(--teal)}
+  .clinician-panel{display:none;flex-direction:column;gap:14px}
+  .clinician-panel.open{display:flex}
+  .score-card{background:white;border-radius:var(--radius);padding:28px 24px;text-align:center;box-shadow:0 4px 24px rgba(13,124,143,0.10)}
+  .score-card .label-top{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--teal);text-transform:uppercase;margin-bottom:18px}
+  .big-circle{width:140px;height:140px;border-radius:50%;margin:0 auto 18px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .big-circle .num{font-size:48px;font-weight:800;line-height:1}
+  .big-circle .denom{font-size:14px;font-weight:500;opacity:0.6;margin-top:2px}
+  .sev-none{background:#dcfce7;color:#15803d}.sev-mild{background:#fef9c3;color:#a16207}
+  .sev-moderate{background:#ffedd5;color:#c2410c}.sev-severe{background:#fee2e2;color:#b91c1c}
+  .sev-name{font-size:20px;font-weight:800;margin-bottom:6px}
+  .sev-range{font-size:13px;color:var(--gray-400);margin-bottom:18px}
+  .sev-bar-wrap{margin:0 0 18px}
+  .sev-bar-track{height:10px;border-radius:10px;overflow:hidden;background:var(--gray-200)}
+  .sev-bar-fill{height:100%;border-radius:10px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+  .sev-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--gray-400);margin-top:5px;font-weight:600}
+  .meaning-box{background:var(--bg);border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.7;color:var(--gray-700);text-align:left}
+  .meaning-box strong{color:var(--navy)}
+  .detail-card{background:white;border-radius:var(--radius);padding:20px;box-shadow:0 4px 24px rgba(13,124,143,0.10)}
+  .cp-title{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--teal);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+  .cp-title::after{content:'';flex:1;height:1px;background:var(--gray-200)}
+  .sub-row{display:flex;gap:8px;margin-bottom:14px}
+  .sub-box{flex:1;border-radius:10px;padding:12px 8px;text-align:center}
+  .sub-box.P{background:#eff6ff}.sub-box.E{background:#f5f3ff}.sub-box.F{background:#ecfdf5}
+  .sub-box .sv{font-size:22px;font-weight:800;display:block}
+  .sub-box.P .sv{color:var(--P)}.sub-box.E .sv{color:var(--E)}.sub-box.F .sv{color:var(--F)}
+  .sub-box .sn{font-size:10px;font-weight:700;opacity:0.65;display:block;margin-top:2px}
+  .sub-box .sl{font-size:11px;opacity:0.6}
+  .cp-table{width:100%;border-collapse:collapse;font-size:13px}
+  .cp-table tr{border-bottom:1px solid var(--gray-100)}.cp-table tr:last-child{border-bottom:none}
+  .cp-table td{padding:9px 4px}.cp-table td:last-child{text-align:right;font-weight:700}
+  .cp-ans-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}
+  .ans-chip{border-radius:6px;padding:6px 4px;text-align:center;font-size:10px;font-weight:700}
+  .ans-chip .qid{display:block;opacity:0.6;font-size:9px}
+  .ans-chip.yes{background:#dcfce7;color:#15803d}.ans-chip.sometimes{background:#fef3c7;color:#92400e}.ans-chip.no{background:#fee2e2;color:#991b1b}
+  .btn-csv{width:100%;padding:14px;background:var(--teal);color:white;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:14px;transition:background 0.2s}
+  .btn-csv:hover{background:var(--navy)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="clinic">คลินิกโรคเวียนศีรษะและการทรงตัว · ชั้น 4</div>
+  <h1>ผลการประเมิน DHI</h1>
+</div>
+<div class="card-wrap">
+  <div class="thanks-card">
+    <div class="checkmark">✅</div>
+    <h2>ขอบคุณที่ตอบแบบประเมิน</h2>
+    <p>คุณตอบแบบประเมินครบ 25 ข้อเรียบร้อยแล้ว<br>กรุณาแสดงหน้าจอนี้แก่เจ้าหน้าที่หรือแพทย์ของท่าน</p>
+    <p class="pt-info" id="pt-info"></p>
+  </div>
+  <div class="next-card">
+    <h3>🏥 ขั้นตอนต่อไป</h3>
+    <p>กรุณารอพบแพทย์หรือนักกายภาพบำบัด<br>ท่านจะได้รับการประเมินและวางแผนการรักษาเพิ่มเติมตามผลคะแนนที่ได้รับในวันนี้</p>
+  </div>
+  <a class="btn-hads" id="btn-hads" href="#">📋 ทำแบบประเมิน HADS ต่อ →</a>
+  <button class="btn-clinician" id="btn-clin" onclick="showPinDialog()">🔒 Clinician Access</button>
+  <div class="clinician-panel" id="clin-panel">
+    <div class="score-card">
+      <div class="label-top">Clinical — คะแนนรวม DHI</div>
+      <div class="big-circle" id="big-circle"><span class="num" id="total-num">—</span><span class="denom">/ 100</span></div>
+      <div class="sev-name" id="sev-name"></div>
+      <div class="sev-range" id="sev-range"></div>
+      <div class="sev-bar-wrap">
+        <div class="sev-bar-track"><div class="sev-bar-fill" id="sev-bar" style="width:0%"></div></div>
+        <div class="sev-bar-labels"><span>0</span><span>น้อย</span><span>ปานกลาง</span><span>มาก</span><span>100</span></div>
+      </div>
+      <div class="meaning-box" id="meaning-box"></div>
+    </div>
+    <div class="detail-card">
+      <div class="cp-title">Clinical Detail</div>
+      <div class="sub-row">
+        <div class="sub-box P"><span class="sv" id="sub-p">—</span><span class="sn">P SCORE</span><span class="sl">ร่างกาย /28</span></div>
+        <div class="sub-box E"><span class="sv" id="sub-e">—</span><span class="sn">E SCORE</span><span class="sl">อารมณ์ /36</span></div>
+        <div class="sub-box F"><span class="sv" id="sub-f">—</span><span class="sn">F SCORE</span><span class="sl">การทำงาน /36</span></div>
+      </div>
+      <table class="cp-table">
+        <tr><td>BPPV Score (P1+F5+P11+P13+P25)</td><td id="bppv-sc">—</td></tr>
+        <tr><td>BPPV % (/20×100)</td><td id="bppv-pct">—</td></tr>
+        <tr><td>Cervicogenic (P1+P11+E9)</td><td id="cerv-sc">—</td></tr>
+        <tr><td>MCID threshold</td><td>18</td></tr>
+        <tr><td>Total DHI &lt;20</td><td>unlikely vestibular</td></tr>
+      </table>
+      <div class="cp-title" style="margin-top:14px">คำตอบรายข้อ</div>
+      <div class="cp-ans-grid" id="ans-grid"></div>
+      <button class="btn-csv" onclick="downloadCSV()">⬇ ดาวน์โหลด CSV</button>
+    </div>
+  </div>
+</div>
+<script>
+const SCORE={yes:4,sometimes:2,no:0};
+const questions=[
+  {id:'P1',type:'P'},{id:'E2',type:'E'},{id:'F3',type:'F'},{id:'P4',type:'P'},
+  {id:'F5',type:'F'},{id:'F6',type:'F'},{id:'F7',type:'F'},{id:'P8',type:'P'},
+  {id:'E9',type:'E'},{id:'E10',type:'E'},{id:'P11',type:'P'},{id:'F12',type:'F'},
+  {id:'P13',type:'P'},{id:'F14',type:'F'},{id:'E15',type:'E'},{id:'F16',type:'F'},
+  {id:'P17',type:'P'},{id:'E18',type:'E'},{id:'F19',type:'F'},{id:'E20',type:'E'},
+  {id:'E21',type:'E'},{id:'E22',type:'E'},{id:'E23',type:'E'},{id:'F24',type:'F'},{id:'P25',type:'P'},
+];
+const params=new URLSearchParams(window.location.search);
+const get=k=>params.get(k)||'';
+const name=get('name'),hn=get('hn'),date=get('date'),vr=get('vr');
+const total=parseInt(get('total'))||0,totalP=parseInt(get('P'))||0;
+const totalE=parseInt(get('E'))||0,totalF=parseInt(get('F'))||0;
+const bppv=parseInt(get('bppv'))||0,cerv=parseInt(get('cerv'))||0;
+const parts=[];if(name)parts.push(name);if(hn)parts.push('HN: '+hn);if(date)parts.push(date);
+document.getElementById('pt-info').textContent=parts.join('  ·  ');
+const hp=new URLSearchParams();
+hp.set('name',name);hp.set('hn',hn);hp.set('date',date);hp.set('vr',vr);
+hp.set('dhi_total',total);hp.set('dhi_P',totalP);hp.set('dhi_E',totalE);hp.set('dhi_F',totalF);
+hp.set('dhi_bppv',bppv);hp.set('dhi_cerv',cerv);
+questions.forEach(q=>hp.set('dhi_'+q.id,get(q.id)));
+document.getElementById('btn-hads').href='https://bankktn.github.io/HADS_online/hads_form.html?'+hp.toString();
+let sevClass,sevName,sevRange,sevColor,meaning;
+if(total===0){sevClass='sev-none';sevName='ไม่มีผลกระทบ';sevRange='คะแนน 0';sevColor='#16a34a';meaning='อาการเวียนศีรษะ<strong>ไม่ส่งผลกระทบ</strong>ต่อการดำเนินชีวิตของท่านในขณะนี้';}
+else if(total<=34){sevClass='sev-mild';sevName='ผลกระทบระดับน้อย';sevRange='คะแนน 16–34 (Mild Handicap)';sevColor='#d97706';meaning='อาการเวียนศีรษะส่งผลกระทบต่อชีวิตประจำวัน<strong>ในระดับน้อย</strong> ท่านยังสามารถทำกิจกรรมส่วนใหญ่ได้';}
+else if(total<=52){sevClass='sev-moderate';sevName='ผลกระทบระดับปานกลาง';sevRange='คะแนน 36–52 (Moderate Handicap)';sevColor='#c2410c';meaning='อาการเวียนศีรษะส่งผลกระทบต่อชีวิตประจำวัน<strong>ในระดับปานกลาง</strong> ท่านควรได้รับการรักษาอย่างเหมาะสม';}
+else{sevClass='sev-severe';sevName='ผลกระทบระดับมาก';sevRange='คะแนน 54 ขึ้นไป (Severe Handicap)';sevColor='#b91c1c';meaning='อาการเวียนศีรษะส่งผลกระทบต่อชีวิตประจำวัน<strong>อย่างมาก</strong> แพทย์จะวางแผนการรักษาที่เหมาะสมให้ท่าน';}
+document.getElementById('total-num').textContent=total;
+document.getElementById('big-circle').className='big-circle '+sevClass;
+document.getElementById('sev-name').textContent=sevName;
+document.getElementById('sev-range').textContent=sevRange;
+document.getElementById('meaning-box').innerHTML=meaning;
+const bar=document.getElementById('sev-bar');bar.style.background=sevColor;
+setTimeout(()=>{bar.style.width=Math.min(total,100)+'%';},100);
+document.getElementById('sub-p').textContent=totalP;
+document.getElementById('sub-e').textContent=totalE;
+document.getElementById('sub-f').textContent=totalF;
+document.getElementById('bppv-sc').textContent=bppv+'/20';
+document.getElementById('bppv-pct').textContent=Math.round(bppv/20*100)+'%';
+document.getElementById('cerv-sc').textContent=cerv+(cerv>9?' ⚠️':'');
+document.getElementById('ans-grid').innerHTML=questions.map(q=>{
+  const val=get(q.id)||'no';
+  return`<div class="ans-chip ${val}"><span class="qid">${q.id}</span>${SCORE[val]}</div>`;
+}).join('');
+
+// ── PIN SYSTEM ──
+const PIN='0180';
+let pinVerified=false;
+function openClinicianView(){
+  document.getElementById('clin-panel').classList.add('open');
+  document.getElementById('btn-clin').innerHTML='🔓 Clinician View';
+}
+function showPinDialog(){
+  if(pinVerified){openClinicianView();return;}
+  const o=document.createElement('div');
+  o.id='pin-overlay';
+  o.style.cssText='position:fixed;inset:0;background:rgba(10,47,63,0.75);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;';
+  o.innerHTML=`<div style="background:white;border-radius:20px;padding:32px 28px;width:300px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.25);">
+    <div style="font-size:36px;margin-bottom:12px;">🩺</div>
+    <div style="font-size:16px;font-weight:800;color:#0a2f3f;margin-bottom:6px;">Clinician Access</div>
+    <div style="font-size:13px;color:#8fa3b1;margin-bottom:20px;">กรุณาใส่รหัส PIN 4 หลัก</div>
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:22px;">
+      <div id="dot-0" style="width:16px;height:16px;border-radius:50%;border:2px solid #dde4ea;transition:all 0.15s;"></div>
+      <div id="dot-1" style="width:16px;height:16px;border-radius:50%;border:2px solid #dde4ea;transition:all 0.15s;"></div>
+      <div id="dot-2" style="width:16px;height:16px;border-radius:50%;border:2px solid #dde4ea;transition:all 0.15s;"></div>
+      <div id="dot-3" style="width:16px;height:16px;border-radius:50%;border:2px solid #dde4ea;transition:all 0.15s;"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+      ${[1,2,3,4,5,6,7,8,9,'','0','⌫'].map(k=>`<button onclick="pinPress('${k}')" ${k===''?'disabled':''} style="padding:16px;border:1.5px solid #dde4ea;border-radius:12px;font-size:20px;font-weight:700;background:${k===''?'transparent':'#f5f8fa'};cursor:${k===''?'default':'pointer'};color:#1a2e38;font-family:inherit;transition:background 0.1s;">${k}</button>`).join('')}
+    </div>
+    <div id="pin-error" style="font-size:12px;color:#dc2626;min-height:18px;margin-bottom:4px;"></div>
+    <button onclick="closePinDialog()" style="background:none;border:none;font-size:13px;color:#8fa3b1;cursor:pointer;font-family:inherit;margin-top:4px;">ยกเลิก</button>
+  </div>`;
+  document.body.appendChild(o);
+  window._pin='';
+}
+function pinPress(k){
+  if(k==='')return;
+  if(k==='⌫'){window._pin=(window._pin||'').slice(0,-1);}
+  else{if((window._pin||'').length>=4)return;window._pin=(window._pin||'')+k;}
+  for(let i=0;i<4;i++){const d=document.getElementById('dot-'+i);if(d){d.style.background=i<window._pin.length?'#0d7c8f':'transparent';d.style.borderColor='#dde4ea';}}
+  if(window._pin.length===4){
+    setTimeout(()=>{
+      if(window._pin===PIN){pinVerified=true;closePinDialog();openClinicianView();}
+      else{
+        document.getElementById('pin-error').textContent='❌ รหัสไม่ถูกต้อง';
+        window._pin='';
+        for(let i=0;i<4;i++){const d=document.getElementById('dot-'+i);if(d){d.style.background='transparent';d.style.borderColor='#dc2626';}}
+        setTimeout(()=>{for(let i=0;i<4;i++){const d=document.getElementById('dot-'+i);if(d)d.style.borderColor='#dde4ea';}const e=document.getElementById('pin-error');if(e)e.textContent='';},1000);
+      }
+    },120);
+  }
+}
+function closePinDialog(){const o=document.getElementById('pin-overlay');if(o)o.remove();window._pin='';}
+function downloadCSV(){
+  let csv='\uFEFF';
+  csv+='ชื่อ-นามสกุล,HN,วันที่,VR#,'+questions.map(q=>q.id).join(',');
+  csv+=',P Score,E Score,F Score,Total DHI,Severity,BPPV Score,BPPV %,Cervicogenic Score\n';
+  csv+=`"${name}","${hn}","${date}","${vr}",`;
+  csv+=questions.map(q=>SCORE[get(q.id)||'no']).join(',');
+  csv+=`,${totalP},${totalE},${totalF},${total},"${sevName}",${bppv},${Math.round(bppv/20*100)}%,${cerv}\n`;
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`DHI_${name||'result'}_${date||'today'}.csv`;a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
